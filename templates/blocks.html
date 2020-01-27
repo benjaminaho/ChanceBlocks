@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<meta name='user_id' content='{{ user_id }}'>
+<script src='{{ url_for("static", filename="blocks.js") }}'></script>
+<script src='{{ url_for("static", filename="generate.js") }}'></script>
+
+<h1 class='title is-size-1'>Blocks</h1>
+
+<div class='container' id='new_block'>
+    <a class='button' onclick='createBlockPrompt()' value='New Block'>New Block</a>
+</div>
+<br>
+
+<div class='container'>
+    {% for cb_id, title in blocks.items() %}
+    <div class='notification' style='background-color:rgb(180, 255, 193)'>
+        <div class='columns'>
+            <div class='column is-one-quarter has-text-centered'>
+                <div id='{{ cb_id }}_title'>
+                    <h3 class='inline title is-size-4' onclick='changeBlockTitlePrompt("{{ cb_id }}", "{{ title }}")'>{{ title }}</h3>
+                    <h3 class='inline title is-size-4' id='{{ cb_id }}_unsaved'></h3>
+                </div>
+                <div class='title is-size-5' onclick='getContent("{{ cb_id }}", GENERATE)' id='{{ cb_id }}_output'><p class='has-text-grey-light'>Generate Output</p></div>
+            </div>
+            <div class='column editor'>
+                <a class='button is-small inline' onclick='toggleEditor("{{ cb_id }}")' id='editor_toggle_{{ cb_id }}'>Show Contents</a>
+                <a class='button is-small inline' onclick='deleteBlock("{{ cb_id }}", "{{ title }}")'>Delete Block</a>
+                <div id='editor_{{ cb_id }}' hidden></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

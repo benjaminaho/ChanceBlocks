@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<meta name='user_id' content='{{ user_id }}'>
+<meta name='blocks' content='{{ blocks }}'>
+<script src='{{ url_for("static", filename="reports.js") }}'></script>
+<script src='{{ url_for("static", filename="generate.js") }}'></script>
+
+<h1 class='title is-size-1'>Reports</h1>
+
+<div class='container' id='new_report'>
+    <a class='button' onclick='createReportPrompt()'>New Report</a>
+</div>
+<br>
+
+<div class='container'>
+    {% for report in reports %}
+    <div class='notification' style='background-color:rgb(243, 255, 180)'>
+        <div class='columns'>
+            <div class='column is-one-quarter'>
+                <div id='{{ report[0] }}_title'>
+                    <h3 class='inline title is-size-4' onclick='changeReportTitlePrompt("{{ report[0] }}", "{{ report[1] }}")'>{{ report[1] }}</h3>
+                    <h3 class='inline title is-size-4' id='{{ report[0] }}_unsaved'></h3>
+                </div>
+                <div class='title is-size-5' onclick='getContent("{{ report[0] }}", GENERATE)' id='{{ report[0] }}_output'><p class='has-text-grey-light'>Generate Output</p></div>
+            </div>
+            <div class='column editor'>
+                <a class='button is-small inline' onclick='toggleEditor("{{ report[0] }}")' id='editor_toggle_{{ report[0] }}'>Show Contents</a>
+                <a class='button is-small inline' onclick='deleteReport("{{ report[0] }}", "{{ report[1] }}")'>Delete Report</a>
+                <div id='editor_{{ report[0] }}' hidden></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

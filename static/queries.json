@@ -1,0 +1,50 @@
+{
+    "add": {
+        "block": [
+            "INSERT INTO chance_blocks VALUES (NULL, NOW(), '%s', NULL, %s);",
+            "SELECT cb_id FROM chance_blocks WHERE title = '%s' AND user_id = %s;"
+        ],
+        "report": [
+            "INSERT INTO reports VALUES (NULL, NOW(), '%s', NULL, %s);",
+            "SELECT report_id FROM reports WHERE title = '%s' AND user_id = %s;"
+        ],
+        "user": [
+            "INSERT INTO users VALUES (NULL, NOW(), '%s', '%s');",
+            "SELECT user_id FROM users WHERE username = '%s' AND password = '%s';"
+        ]
+    },
+    "get": {
+        "block": {
+            "primary content": "SELECT cb_id, title FROM chance_blocks WHERE user_id = %s;",
+            "secondary content": "SELECT content FROM chance_blocks WHERE cb_id = %s;"
+        },
+        "report": {
+            "primary content": "SELECT report_id, title, post_time FROM reports WHERE user_id = %s;",
+            "secondary content": "SELECT cb_id, quantity, unique_results FROM cb_report_instances WHERE report_id = %s;",
+            "tertiary content": "SELECT cb_id FROM cb_report_instances WHERE report_id = %s;"
+        },
+        "user": {
+            "internal": "SELECT username, password FROM users WHERE user_id = '%s';",
+            "external": "SELECT user_id, password FROM users WHERE username = '%s';"
+        }
+    },
+    "update": {
+        "block": {
+            "title": "UPDATE chance_blocks SET title = '%s' WHERE cb_id = %s;",
+            "content": "UPDATE chance_blocks SET content = '%s' WHERE cb_id = %s;"
+        },
+        "report": {
+            "title": "UPDATE reports SET title = '%s' WHERE report_id = %s;",
+            "content":[
+                "SELECT cb_id FROM cb_report_instances WHERE report_id = %s;",
+                "INSERT INTO cb_report_instances VALUES (%s, %s, %s, '%s');",
+                "UPDATE cb_report_instances SET quantity = %s, unique_results = '%s' WHERE cb_id = %s AND report_id = %s;",
+                "DELETE FROM cb_report_instances WHERE cb_id = %s AND report_id = %s;"
+            ]
+        }
+    },
+    "remove": {
+        "block": "DELETE FROM chance_blocks WHERE cb_id = %s AND user_id = %s;",
+        "report": "DELETE FROM reports WHERE report_id = %s AND user_id = %s;"
+    }
+}
